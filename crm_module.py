@@ -25,14 +25,16 @@ class CRMView(Frame):
         # Create the form for displaying the list of contacts.
         layout = Layout([100])
         self.add_layout(layout)
-        layout.add_widget(Label("Welcome to the CRM module! \n Please choose one of the following.",
+        layout.add_widget(Label("\n Welcome to the CRM module! \n Please choose one of the following.",
                                 height=5,
                                 align="^"))
-        layout.add_widget(Divider())
+        layout.add_widget(Divider(height=1))
 
-        layout1 = Layout([1])
+        layout1 = Layout([1], fill_frame=True)
         self.add_layout(layout1)
         layout1.add_widget(Button("Add user", self._add), 0)
+        layout1.add_widget(Divider())
+
 
         layout2 = Layout([1])
         self.add_layout(layout2)
@@ -46,7 +48,7 @@ class CRMView(Frame):
         self.add_layout(layout4)
         layout4.add_widget(Button("Delete Customer", self._delete), 0)
 
-        layout4.add_widget(Divider())
+        layout4.add_widget(Divider(height=1))
 
         layout5 = Layout([1])
         self.add_layout(layout5)
@@ -56,7 +58,7 @@ class CRMView(Frame):
         self.fix()
 
     def _add(self):
-        return None
+        raise NextScene("Customer Details")
 
     def _listall(self):
         return None
@@ -74,6 +76,46 @@ class CRMView(Frame):
 
 
 
+class CustomerView(Frame):
+    def __init__(self, screen): # model
+        super(CustomerView, self).__init__(screen,
+                                          screen.height * 2 // 3,
+                                          screen.width * 2 // 3,
+                                          hover_focus=True,
+                                          can_scroll=False,
+                                          title="Customer Details",
+                                          reduce_cpu=True)
+        # Save off the model that accesses the contacts database.
+        # self._model = model
+
+        # Create the form for displaying the list of contacts.
+        layout = Layout([100], fill_frame=True)
+        self.add_layout(layout)
+        layout.add_widget(Text("Name:", "name"))
+        layout.add_widget(Text("Subscription Status:", "subscription"))
+        layout.add_widget(Text("Email address:", "email"))
+
+        layout2 = Layout([1, 1, 1, 1])
+        self.add_layout(layout2)
+        layout2.add_widget(Button("Save", self._ok), 0)
+        layout2.add_widget(Button("Cancel", self._cancel), 3)
+        self.fix()
+
+    def reset(self):
+        # Do standard reset to clear out form, then populate with new data.
+        super(CustomerView, self).reset()
+        # self.data = self._model.get_current_contact()
+
+    def _ok(self):
+        self.save()
+        # self._model.update_current_contact(self.data)
+        raise NextScene("CRM Module")
+
+    @staticmethod
+    def _cancel():
+        raise NextScene("CRM Module")
+
+
 
 
 # contacts = ContactModel()
@@ -81,7 +123,8 @@ class CRMView(Frame):
 def demo(screen, scene):
     scenes = [
         # Scene([ListView(screen, contacts)], -1, name="Main"),
-        Scene([CRMView(screen)], -1, name="CRM Module") #contacts
+        Scene([CRMView(screen)], -1, name="CRM Module"), #contacts
+        Scene([CRMView(screen)], -1, name="Customer Details") #contacts
     ]
 
     screen.play(scenes, stop_on_resize=True, start_scene=scene, allow_int=True)
