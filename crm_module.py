@@ -6,9 +6,12 @@ from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
-
+import random
 
 from models import ContactModel
+import uuid
+
+
 
 
 class CRMView(Frame):
@@ -86,9 +89,13 @@ class CustomerView(Frame):
         # Save off the model that accesses the contacts database.
         self._model = model
 
+        self.__unique_id = uuid.uuid1()
+
         # Create the form for displaying the list of contacts.
         layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
+
+        layout.add_widget(Label(label=f"Unique ID: {self.__unique_id}", name="id"))
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Subscription Status:", "status"))
         layout.add_widget(Text("Email address:", "email"))
