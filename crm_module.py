@@ -12,7 +12,7 @@ from models import ContactModel
 
 
 class CRMView(Frame):
-    def __init__(self, screen):
+    def __init__(self, screen, model):
         super(CRMView, self).__init__(screen,
                                           screen.height * 2 // 3,
                                           screen.width * 2 // 3,
@@ -20,6 +20,8 @@ class CRMView(Frame):
                                           can_scroll=False,
                                           title="CRM Module",
                                           reduce_cpu=True)
+
+        self._model = model
 
         # Create the form for displaying the list of contacts.
         layout = Layout([100])
@@ -54,6 +56,7 @@ class CRMView(Frame):
         self.fix()
 
     def _add(self):
+        self._model.current_id = None
         raise NextScene("Customer Details")
 
     def _listall(self):
@@ -72,7 +75,7 @@ class CRMView(Frame):
 
 
 class CustomerView(Frame):
-    def __init__(self, screen): # model
+    def __init__(self, screen, model):
         super(CustomerView, self).__init__(screen,
                                           screen.height * 2 // 3,
                                           screen.width * 2 // 3,
@@ -81,7 +84,7 @@ class CustomerView(Frame):
                                           title="Customer Details",
                                           reduce_cpu=True)
         # Save off the model that accesses the contacts database.
-        # self._model = model
+        self._model = model
 
         # Create the form for displaying the list of contacts.
         layout = Layout([50], fill_frame=True)
@@ -99,11 +102,11 @@ class CustomerView(Frame):
     def reset(self):
         # Do standard reset to clear out form, then populate with new data.
         super(CustomerView, self).reset()
-        # self.data = self._model.get_current_contact()
+        self.data = self._model.get_current_contact()
 
     def _ok(self):
         self.save()
-        # self._model.update_current_contact(self.data)
+        self._model.update_current_contact(self.data)
         raise NextScene("CRM Module")
 
     @staticmethod
@@ -161,9 +164,9 @@ customers = ContactModel()
 
 def demo(screen, scene):
     scenes = [
-        Scene([CRMView(screen)], -1, name="CRM Module"), #contacts
-        Scene([CustomerView(screen)], -1, name="Customer Details"), #contacts
-        Scene([ListView(screen, customers)], -1, name="Customer List") #contacts
+        Scene([CRMView(screen, customers)], -1, name="CRM Module"),
+        Scene([CustomerView(screen, customers)], -1, name="Customer Details"),
+        Scene([ListView(screen, customers)], -1, name="Customer List")
     ]
 
     screen.play(scenes, stop_on_resize=True, start_scene=scene, allow_int=True)

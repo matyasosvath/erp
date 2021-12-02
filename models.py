@@ -31,7 +31,7 @@ class ContactModel(object):
 
     def get_summary(self):
         return self._db.cursor().execute(
-            "SELECT name, id from customers").fetchall()
+            "SELECT name,email, id from customers").fetchall()
 
     def get_contact(self, customer_id):
         return self._db.cursor().execute(
