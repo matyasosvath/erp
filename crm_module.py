@@ -90,7 +90,7 @@ class CustomerView(Frame):
         layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
         layout.add_widget(Text("Name:", "name"))
-        layout.add_widget(Text("Subscription Status:", "subscription"))
+        layout.add_widget(Text("Subscription Status:", "status"))
         layout.add_widget(Text("Email address:", "email"))
 
         layout2 = Layout([1, 1, 1, 1])
