@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 
-from asciimatics.widgets import Frame, ListBox, Layout, Divider, Text, \
-    Button, TextBox, Widget
-from asciimatics.scene import Scene
-from asciimatics.screen import Screen
-from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
-import sys
 import sqlite3
 
 
@@ -17,37 +11,35 @@ class ContactModel(object):
 
         # Create the basic contact table.
         self._db.cursor().execute('''
-            CREATE TABLE contacts(
+            CREATE TABLE customers(
                 id INTEGER PRIMARY KEY,
                 name TEXT,
-                phone TEXT,
-                address TEXT,
                 email TEXT,
-                notes TEXT)
+                status TEXT)
         ''')
         self._db.commit()
 
         # Current contact when editing.
         self.current_id = None
 
-    def add(self, contact):
+    def add(self, customer):
         self._db.cursor().execute('''
-            INSERT INTO contacts(name, phone, address, email, notes)
-            VALUES(:name, :phone, :address, :email, :notes)''',
-                                  contact)
+            INSERT INTO customers(name, email, status)
+            VALUES(:name, :email, :status)''',
+                                  customer)
         self._db.commit()
 
     def get_summary(self):
         return self._db.cursor().execute(
-            "SELECT name, id from contacts").fetchall()
+            "SELECT name, id from customers").fetchall()
 
-    def get_contact(self, contact_id):
+    def get_contact(self, customer_id):
         return self._db.cursor().execute(
-            "SELECT * from contacts WHERE id=:id", {"id": contact_id}).fetchone()
+            "SELECT * from customers WHERE id=:id", {"id": customer_id}).fetchone()
 
     def get_current_contact(self):
         if self.current_id is None:
-            return {"name": "", "address": "", "phone": "", "email": "", "notes": ""}
+            return {"name": "", "email": "", "status": ""}
         else:
             return self.get_contact(self.current_id)
 
@@ -56,14 +48,13 @@ class ContactModel(object):
             self.add(details)
         else:
             self._db.cursor().execute('''
-                UPDATE contacts SET name=:name, phone=:phone, address=:address,
-                email=:email, notes=:notes WHERE id=:id''',
+                UPDATE customer SET name=:name, email=:email, status=:status WHERE id=:id''',
                                       details)
             self._db.commit()
 
     def delete_contact(self, contact_id):
         self._db.cursor().execute('''
-            DELETE FROM contacts WHERE id=:id''', {"id": contact_id})
+            DELETE FROM customers WHERE id=:id''', {"id": contact_id})
         self._db.commit()
 
 

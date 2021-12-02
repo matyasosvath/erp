@@ -82,7 +82,7 @@ class ListView(Frame):
         # Create the form for displaying the list of contacts.
         self._list_view = ListBox(
             Widget.FILL_FRAME,
-            model.get_summary(),
+            options=model.get_summary(),
             name="contacts",
             add_scroll_bar=True,
             on_change=self._on_pick,

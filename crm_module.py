@@ -6,12 +6,13 @@ from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
-import sqlite3
 
+
+from models import ContactModel
 
 
 class CRMView(Frame):
-    def __init__(self, screen): # model
+    def __init__(self, screen):
         super(CRMView, self).__init__(screen,
                                           screen.height * 2 // 3,
                                           screen.width * 2 // 3,
@@ -19,8 +20,6 @@ class CRMView(Frame):
                                           can_scroll=False,
                                           title="CRM Module",
                                           reduce_cpu=True)
-        # Save off the model that accesses the contacts database.
-        # self._model = model
 
         # Create the form for displaying the list of contacts.
         layout = Layout([100])
@@ -30,15 +29,12 @@ class CRMView(Frame):
                                 align="^"))
         layout.add_widget(Divider(height=1))
 
-        layout1 = Layout([1], fill_frame=True)
+        layout1 = Layout([1,1], fill_frame=True)
         self.add_layout(layout1)
         layout1.add_widget(Button("Add user", self._add), 0)
         layout1.add_widget(Divider())
 
-
-        layout2 = Layout([1])
-        self.add_layout(layout2)
-        layout2.add_widget(Button("List Customers", self._listall), 0)
+        layout1.add_widget(Button("List Customers", self._listall), 1)
 
         layout3 = Layout([1])
         self.add_layout(layout3)
@@ -61,7 +57,7 @@ class CRMView(Frame):
         raise NextScene("Customer Details")
 
     def _listall(self):
-        return None
+        raise NextScene("Customer List")
 
 
     def _edit(self):
@@ -73,7 +69,6 @@ class CRMView(Frame):
     @staticmethod
     def _quit():
         raise StopApplication("User pressed quit")
-
 
 
 class CustomerView(Frame):
@@ -89,7 +84,7 @@ class CustomerView(Frame):
         # self._model = model
 
         # Create the form for displaying the list of contacts.
-        layout = Layout([100], fill_frame=True)
+        layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Subscription Status:", "subscription"))
@@ -118,13 +113,57 @@ class CustomerView(Frame):
 
 
 
-# contacts = ContactModel()
+
+class ListView(Frame):
+    def __init__(self, screen, model):
+        super(ListView, self).__init__(screen,
+                                       screen.height * 2 // 3,
+                                       screen.width * 2 // 3,
+                                       on_load=self._reload_list,
+                                       hover_focus=True,
+                                       can_scroll=False,
+                                       title="Customer List")
+        # Save off the model that accesses the contacts database.
+        self._model = model
+
+        # Create the form for displaying the list of contacts.
+        self._list_view = ListBox(
+            Widget.FILL_FRAME,
+            options=model.get_summary(),
+            name="customers",
+            add_scroll_bar=True)
+        layout = Layout([100], fill_frame=True)
+        self.add_layout(layout)
+        layout.add_widget(self._list_view)
+        layout.add_widget(Divider())
+
+        layout2 = Layout([1, 1, 1, 1])
+        self.add_layout(layout2)
+        layout2.add_widget(Button("Go back", self._go_back), 0)
+        layout2.add_widget(Button("Quit", self._quit), 3)
+        self.fix()
+
+    def _reload_list(self, new_value=None):
+        self._list_view.options = self._model.get_summary()
+        self._list_view.value = new_value
+
+    def _go_back(self):
+        raise NextScene("CRM Module")
+
+    @staticmethod
+    def _quit():
+        raise StopApplication("User pressed quit")
+
+
+
+
+customers = ContactModel()
 
 def demo(screen, scene):
     scenes = [
-        # Scene([ListView(screen, contacts)], -1, name="Main"),
         Scene([CRMView(screen)], -1, name="CRM Module"), #contacts
-        Scene([CRMView(screen)], -1, name="Customer Details") #contacts
+        Scene([CustomerView(screen)], -1, name="Customer Details"), #contacts
+        Scene([ListView(screen, customers)], -1, name="Customer List") #contacts
     ]
 
     screen.play(scenes, stop_on_resize=True, start_scene=scene, allow_int=True)
