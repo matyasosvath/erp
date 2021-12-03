@@ -31,7 +31,7 @@ class ERPView(Frame):
                                 align="^"))
         layout.add_widget(Divider(height=1))
 
-        layout1 = Layout([1,1,1])
+        layout1 = Layout([1,1,1], fill_frame=True)
         self.add_layout(layout1)
         layout1.add_widget(Button("CRM Module", self._go_to_crm), 0)
         layout1.add_widget(Button("HR Module", self._go_to_hr), 1)
@@ -78,22 +78,19 @@ class CRMView(Frame):
                                 align="^"))
         layout.add_widget(Divider(height=1))
 
-        layout1 = Layout([1,1], fill_frame=True)
+        layout1 = Layout([1,1])
         self.add_layout(layout1)
         layout1.add_widget(Button("Add user", self._add), 0)
-        layout1.add_widget(Divider())
+        layout1.add_widget(Divider(height=5))
 
         layout1.add_widget(Button("List Customers", self._listall), 1)
 
-        layout3 = Layout([1])
+        layout3 = Layout([1,1])
         self.add_layout(layout3)
         layout3.add_widget(Button("Edit Customer", self._edit ), 0)
+        layout3.add_widget(Button("Delete Customer", self._delete), 1)
 
-        layout4 = Layout([1])
-        self.add_layout(layout4)
-        layout4.add_widget(Button("Delete Customer", self._delete), 0)
-
-        layout4.add_widget(Divider(height=1))
+        layout3.add_widget(Divider(height=5))
 
         layout5 = Layout([1])
         self.add_layout(layout5)
