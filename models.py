@@ -36,7 +36,12 @@ class CustomerModel(object):
             if id == vasarlo.id:
                 return vasarlo
 
-    def update(self, id):
+    def update(self, id, name: str = "", email: str = "", status: str = ""):
+        for vasarlo in self.customers:
+            if vasarlo.id == id:
+                vasarlo.name = name
+                vasarlo.email = email
+                vasarlo.status = status
         pass
 
     def delete(self, id):

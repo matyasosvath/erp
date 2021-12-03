@@ -157,8 +157,6 @@ class AskCustomerIdView(Frame):
         if self._model.current_id is None:
             self._model.current_id = self.data
 
-#TODO keresd meg az ID, ha nincs pop up hogy nincs
-
     def _ok(self):
         self._model.current_id = self.data
         raise NextScene("Customer Details")
@@ -213,16 +211,17 @@ class CustomerView(Frame):
                 "email": self._customer.email,
                 "status": self._customer.status}
         else:
-            #TODO maybe good
+            #TODO maybe good #TODO szerintem itt van a kutya elásva
             self.data = self._model.read(self._model.current_id)
 
     def _ok(self):
         self.save()
         if self._model.current_id is None:
-            self._model.customers.append(Customer(**self.data))
+            self._model.create(Customer(**self.data))
             # self._model.customers.append(self.data)
         else:
-            self._model.customers[self._model.current_id] = self.data
+            self._model.update(id=self._model.current_id, **self.data)
+            # self._model.customers[self._model.current_id] = self.data
         raise NextScene("CRM Module")
 
     @staticmethod
