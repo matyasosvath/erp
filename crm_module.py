@@ -160,7 +160,7 @@ class AskCustomerIdView(Frame):
 #TODO keresd meg az ID, ha nincs pop up hogy nincs
 
     def _ok(self):
-        self.save()
+        self._model.current_id = self.data
         raise NextScene("Customer Details")
 
     def _delete(self):
@@ -213,8 +213,8 @@ class CustomerView(Frame):
                 "email": self._customer.email,
                 "status": self._customer.status}
         else:
-            #TODO hibás
-            self.data = self._model.customers[self._model.current_id]
+            #TODO maybe good
+            self.data = self._model.read(self._model.current_id)
 
     def _ok(self):
         self.save()
@@ -222,7 +222,7 @@ class CustomerView(Frame):
             self._model.customers.append(Customer(**self.data))
             # self._model.customers.append(self.data)
         else:
-            self._model.contacts[self._model.current_id] = self.data
+            self._model.customers[self._model.current_id] = self.data
         raise NextScene("CRM Module")
 
     @staticmethod

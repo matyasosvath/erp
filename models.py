@@ -31,8 +31,10 @@ class CustomerModel(object):
     def create(self, vasarlo: Customer):
         self.customers.append(vasarlo)
 
-    def read(self):
-        pass
+    def read(self, id):
+        for vasarlo in self.customers:
+            if id == vasarlo.id:
+                return vasarlo
 
     def update(self, id):
         pass
