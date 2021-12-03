@@ -7,12 +7,56 @@ from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
 
-from models import ContactModel
+from models import ContactModel, ContactModell, Customer
 import uuid
-import random
 
-def generate_random_id(low,high):
-    return random.randint(low,high)
+
+class ERPView(Frame):
+    def __init__(self, screen):
+        super(ERPView, self).__init__(screen,
+                                          screen.height * 2 // 3,
+                                          screen.width * 2 // 3,
+                                          hover_focus=True,
+                                          can_scroll=False,
+                                          title="ERP Software",
+                                          reduce_cpu=True)
+
+
+        # Create the form for displaying the list of contacts.
+        layout = Layout([100])
+        self.add_layout(layout)
+        layout.add_widget(Label("\n Welcome to the ERP Software \
+                                \n Please choose one of the following module.",
+                                height=5,
+                                align="^"))
+        layout.add_widget(Divider(height=1))
+
+        layout1 = Layout([1,1,1])
+        self.add_layout(layout1)
+        layout1.add_widget(Button("CRM Module", self._go_to_crm), 0)
+        layout1.add_widget(Button("HR Module", self._go_to_hr), 1)
+        layout1.add_widget(Button("Sales Module", self._go_to_sales), 2)
+        layout1.add_widget(Divider(height=1))
+
+
+        layout4 = Layout([1])
+        self.add_layout(layout4)
+        layout4.add_widget(Button("Quit", self._quit), 0)
+
+        self.fix()
+
+    def _go_to_crm(self):
+        raise NextScene("CRM Module")
+
+    def _go_to_hr(self):
+        raise NextScene("HR Module")
+
+    def _go_to_sales(self):
+        raise NextScene("Sales Module")
+
+    @staticmethod
+    def _quit():
+        raise StopApplication("User pressed quit")
 
 
 class CRMView(Frame):
@@ -142,7 +186,7 @@ class CustomerView(Frame):
         layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
 
-        layout.add_widget(Label(label=f"Unique ID: {generate_random_id(1,100)}", name="id"))
+        layout.add_widget(Label(label=f"Unique ID:", name="id"))
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Subscription Status:", "status"))
         layout.add_widget(Text("Email address:", "email"))
@@ -218,6 +262,7 @@ customers = ContactModel()
 
 def demo(screen, scene):
     scenes = [
+        Scene([ERPView(screen)], -1, name="ERP Software"),
         Scene([CRMView(screen, customers)], -1, name="CRM Module"),
         Scene([CustomerView(screen, customers)], -1, name="Customer Details"),
         Scene([ListView(screen, customers)], -1, name="Customer List"),

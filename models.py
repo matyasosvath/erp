@@ -1,6 +1,30 @@
 #!/usr/bin/env python3
 
+import random
 import sqlite3
+import csv
+
+
+def generate_random_id(low,high):
+    return random.randint(low,high)
+
+
+class Customer:
+    def __init__(self, name,email,status):
+        self.id = generate_random_id(1,100)
+        self.name = name
+        self.email = email
+        self.status = status
+
+
+class ContactModell(object):
+    def __init__(self):
+        # Current contact when editing.
+        self.current_id = None
+
+        # List of dicts, where each dict contains a single contact, containing
+        # name, address, phone, email and notes fields.
+        self.contacts = []
 
 
 class ContactModel(object):
