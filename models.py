@@ -10,7 +10,7 @@ def generate_random_id(low,high):
 
 
 class Customer:
-    def __init__(self, name,email,status):
+    def __init__(self, name: str = "",email:str = "",status:str = ""):
         self.id = generate_random_id(1,100)
         self.name = name
         self.email = email
@@ -24,7 +24,7 @@ class ContactModell(object):
 
         # List of dicts, where each dict contains a single contact, containing
         # name, address, phone, email and notes fields.
-        self.contacts = []
+        self.customers = []
 
 
 class ContactModel(object):
