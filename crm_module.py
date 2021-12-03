@@ -186,7 +186,7 @@ class CustomerView(Frame):
         layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
 
-        layout.add_widget(Label(label=f"Unique ID:", name="id"))
+        # layout.add_widget(Label(label=f"Unique ID:", name="id"))
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Subscription Status:", "status"))
         layout.add_widget(Text("Email address:", "email"))
@@ -201,14 +201,20 @@ class CustomerView(Frame):
         # Do standard reset to clear out form, then populate with new data.
         super(CustomerView, self).reset()
         if self._model.current_id is None:
-            self.data = {"name": "", "email": "", "status": ""}
+            self._customer = Customer()
+            self.data = {
+                "name": self._customer.name,
+                "email": self._customer.email,
+                "status": self._customer.status}
         else:
+            #TODO hibás
             self.data = self._model.customers[self._model.current_id]
 
     def _ok(self):
         self.save()
         if self._model.current_id is None:
-            self._model.customers.append(self.data)
+            self._model.customers.append(Customer(**self.data))
+            # self._model.customers.append(self.data)
         else:
             self._model.contacts[self._model.current_id] = self.data
         raise NextScene("CRM Module")
@@ -233,7 +239,7 @@ class ListView(Frame):
         # Create the form for displaying the list of contacts.
         self._list_view = ListBox(
             Widget.FILL_FRAME,
-            options= [(x["name"], i) for i,x in enumerate(self._model.customers)],
+            options= [(x.name, i) for i,x in enumerate(self._model.customers)],
             name="customers",
             add_scroll_bar=True)
 
@@ -249,7 +255,7 @@ class ListView(Frame):
         self.fix()
 
     def _reload_list(self, new_value=None):
-        self._list_view.options =  [(x["name"], i) for i,x in enumerate(self._model.customers)]
+        self._list_view.options =  [(x.name, i) for i,x in enumerate(self._model.customers)]
         self._list_view.value = new_value
 
     def _go_back(self):
