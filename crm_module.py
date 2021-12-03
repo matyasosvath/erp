@@ -68,8 +68,7 @@ class CRMView(Frame):
 
     def _edit(self):
         self.save()
-        self._model.current_id = self.data["customers"]
-        raise NextScene("Customer Details")
+        raise NextScene("Customer ID")
 
     def _delete(self):
         return None
@@ -214,7 +213,8 @@ def demo(screen, scene):
     scenes = [
         Scene([CRMView(screen, customers)], -1, name="CRM Module"),
         Scene([CustomerView(screen, customers)], -1, name="Customer Details"),
-        Scene([ListView(screen, customers)], -1, name="Customer List")
+        Scene([ListView(screen, customers)], -1, name="Customer List"),
+        Scene([AskCustomerIdView(screen, customers)], -1, name="Customer ID")
     ]
 
     screen.play(scenes, stop_on_resize=True, start_scene=scene, allow_int=True)
