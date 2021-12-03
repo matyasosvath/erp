@@ -4,6 +4,7 @@ import random
 import sqlite3
 import csv
 
+# from typing imprt Type
 
 def generate_random_id(low,high):
     return random.randint(low,high)
@@ -11,20 +12,62 @@ def generate_random_id(low,high):
 
 class Customer:
     def __init__(self, name: str = "",email:str = "",status:str = ""):
-        self.id = generate_random_id(1,100)
+        self.id = str(generate_random_id(1,100))
         self.name = name
         self.email = email
         self.status = status
 
 
-class ContactModell(object):
+class CustomerModel(object):
     def __init__(self):
         # Current contact when editing.
         self.current_id = None
 
         # List of dicts, where each dict contains a single contact, containing
         # name, address, phone, email and notes fields.
+        # self.customers = dict()
         self.customers = []
+
+    def create(self, vasarlo: Customer):
+        self.customers.append(vasarlo)
+
+    def read(self):
+        pass
+
+    def update(self, id):
+        pass
+
+    def delete(self, id):
+        #TODO if works refactoe quickly before Tamas sees it
+        all_ids = [cust.id for cust in self.customers]
+        if id in all_ids:
+            for customer in self.customers:
+                if customer.id == id:
+                    del customer
+
+
+# Create Test database
+
+dumma_data = {"name": "Teszt teszt1", "email": "teszt1@teszt.com", "status": "active"}
+dumma_data1 = {"name": "Teszt teszt2", "email": "teszt2@teszt.com", "status": "active"}
+dumma_data2 = {"name": "Teszt teszt3", "email": "teszt3@teszt.com", "status": "active"}
+dumma_data3 = {"name": "Teszt teszt4", "email": "teszt4@teszt.com", "status": "active"}
+dumma_data4 = {"name": "Teszt teszt5", "email": "teszt5@teszt.com", "status": "active"}
+dumma_data5 = {"name": "Teszt teszt6", "email": "teszt6@teszt.com", "status": "passive"}
+
+dummies = [
+    dumma_data,
+    dumma_data1,
+    dumma_data2,
+    dumma_data3,
+    dumma_data4,
+    dumma_data5,
+]
+
+
+for dummy in dummies:
+    c = Customer(dummy["name"], dummy["email"], dummy["status"])
+
 
 
 class ContactModel(object):

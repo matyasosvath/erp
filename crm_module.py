@@ -7,7 +7,7 @@ from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
 
-from models import ContactModel, ContactModell, Customer
+from models import ContactModel, CustomerModel, Customer
 import uuid
 
 
@@ -146,7 +146,8 @@ class AskCustomerIdView(Frame):
 
         layout2 = Layout([1, 1, 1, 1])
         self.add_layout(layout2)
-        layout2.add_widget(Button("Save", self._ok), 0)
+        layout2.add_widget(Button("Edit", self._ok), 0)
+        layout2.add_widget(Button("Delete", self._delete), 1)
         layout2.add_widget(Button("Cancel", self._cancel), 3)
         self.fix()
 
@@ -161,6 +162,11 @@ class AskCustomerIdView(Frame):
     def _ok(self):
         self.save()
         raise NextScene("Customer Details")
+
+    def _delete(self):
+        self.save()
+        self._model.delete(self.data["id"])
+        raise NextScene("CRM Module")
 
     @staticmethod
     def _cancel():
@@ -239,7 +245,7 @@ class ListView(Frame):
         # Create the form for displaying the list of contacts.
         self._list_view = ListBox(
             Widget.FILL_FRAME,
-            options= [(x.name, i) for i,x in enumerate(self._model.customers)],
+            options= [(f"Name: {x.name}, ID: {x.id}, E-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)],
             name="customers",
             add_scroll_bar=True)
 
@@ -255,7 +261,7 @@ class ListView(Frame):
         self.fix()
 
     def _reload_list(self, new_value=None):
-        self._list_view.options =  [(x.name, i) for i,x in enumerate(self._model.customers)]
+        self._list_view.options =  [(f"Name: {x.name}, ID: {x.id}, E-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)]
         self._list_view.value = new_value
 
     def _go_back(self):
@@ -268,7 +274,7 @@ class ListView(Frame):
 
 
 
-customers = ContactModell()
+customers = CustomerModel()
 
 def demo(screen, scene):
     scenes = [
