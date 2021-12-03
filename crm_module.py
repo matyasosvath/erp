@@ -99,8 +99,12 @@ class AskCustomerIdView(Frame):
         self.add_layout(layout)
 
         layout.add_widget(Text("ID:", "id"))
-        self.fix()
 
+        layout2 = Layout([1, 1, 1, 1])
+        self.add_layout(layout2)
+        layout2.add_widget(Button("Save", self._ok), 0)
+        layout2.add_widget(Button("Cancel", self._cancel), 3)
+        self.fix()
 
     def reset(self):
         # Do standard reset to clear out form, then populate with new data.
@@ -108,9 +112,11 @@ class AskCustomerIdView(Frame):
         if self._model.current_id is None:
             self._model.current_id = self.data
 
+#TODO keresd meg az ID, ha nincs pop up hogy nincs
+
     def _ok(self):
         self.save()
-        raise NextScene("CRM Module")
+        raise NextScene("Customer Details")
 
     @staticmethod
     def _cancel():
