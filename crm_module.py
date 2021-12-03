@@ -154,11 +154,12 @@ class AskCustomerIdView(Frame):
     def reset(self):
         # Do standard reset to clear out form, then populate with new data.
         super(AskCustomerIdView, self).reset()
-        if self._model.current_id is None:
-            self._model.current_id = self.data
+        self._model.current_id = None
+        self.data = {"id": ""}
 
     def _ok(self):
-        self._model.current_id = self.data
+        self.save()
+        self._model.current_id = self.data['id']
         raise NextScene("Customer Details")
 
     def _delete(self):
@@ -205,22 +206,33 @@ class CustomerView(Frame):
         # Do standard reset to clear out form, then populate with new data.
         super(CustomerView, self).reset()
         if self._model.current_id is None:
-            self._customer = Customer()
             self.data = {
-                "name": self._customer.name,
-                "email": self._customer.email,
-                "status": self._customer.status}
+                "name": "",
+                "email": "",
+                "status": ""}
         else:
             #TODO maybe good #TODO szerintem itt van a kutya elásva
-            self.data = self._model.read(self._model.current_id)
+            vasarlo = self._model.read(self._model.current_id)
+            self.data = {
+                "name": vasarlo.name,
+                "email": vasarlo.email,
+                "status": vasarlo.status}
 
     def _ok(self):
         self.save()
         if self._model.current_id is None:
-            self._model.create(Customer(**self.data))
+            self._model.create(
+                               Customer(
+                                   name=self.data["name"],
+                                   email=self.data["email"],
+                                   status=self.data["status"]))
             # self._model.customers.append(self.data)
         else:
-            self._model.update(id=self._model.current_id, **self.data)
+            self._model.update(
+                id=self._model.current_id,
+                name=self.data["name"],
+                email=self.data["email"],
+                status=self.data['status'])
             # self._model.customers[self._model.current_id] = self.data
         raise NextScene("CRM Module")
 
