@@ -48,9 +48,9 @@ class CustomerModel(object):
         #TODO if works refactoe quickly before Tamas sees it
         all_ids = [cust.id for cust in self.customers]
         if id in all_ids:
-            for customer in self.customers:
+            for i, customer in enumerate(self.customers):
                 if customer.id == id:
-                    del customer
+                    del self.customers[i]
 
 
 # Create Test database

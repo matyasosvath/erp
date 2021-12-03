@@ -147,7 +147,7 @@ class AskCustomerIdView(Frame):
         layout2 = Layout([1, 1, 1, 1])
         self.add_layout(layout2)
         layout2.add_widget(Button("Edit", self._ok), 0)
-        layout2.add_widget(Button("Delete", self._delete), 1)
+        layout2.add_widget(Button("Delete", self._delete), 2)
         layout2.add_widget(Button("Cancel", self._cancel), 3)
         self.fix()
 
