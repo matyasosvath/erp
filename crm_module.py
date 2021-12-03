@@ -6,12 +6,13 @@ from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
-import random
 
 from models import ContactModel
 import uuid
+import random
 
-
+def generate_random_id(low,high):
+    return random.randint(low,high)
 
 
 class CRMView(Frame):
@@ -65,9 +66,10 @@ class CRMView(Frame):
     def _listall(self):
         raise NextScene("Customer List")
 
-
     def _edit(self):
-        return None
+        self.save()
+        self._model.current_id = self.data["customers"]
+        raise NextScene("Customer Details")
 
     def _delete(self):
         return None
@@ -75,6 +77,44 @@ class CRMView(Frame):
     @staticmethod
     def _quit():
         raise StopApplication("User pressed quit")
+
+
+class AskCustomerIdView(Frame):
+    def __init__(self,screen,model):
+        super(AskCustomerIdView, self).__init__(screen,
+                                          screen.height * 2 // 3,
+                                          screen.width * 2 // 3,
+                                          hover_focus=True,
+                                          can_scroll=False,
+                                          title="Customer ID",
+                                          reduce_cpu=True)
+
+        # Save off the model that accesses the contacts database.
+        self._model = model
+
+        # self.__unique_id = uuid.uuid1()
+        # self.__unique_id = generate_random_id(1,100)
+
+        # Create the form for displaying the list of contacts.
+        layout = Layout([100], fill_frame=True)
+        self.add_layout(layout)
+
+        layout.add_widget(Text("ID:", "id"))
+
+
+    def reset(self):
+        # Do standard reset to clear out form, then populate with new data.
+        super(AskCustomerIdView, self).reset()
+        if self._model.current_id is None:
+            self._model.current_id = self.data
+
+    def _ok(self):
+        self.save()
+        raise NextScene("CRM Module")
+
+    @staticmethod
+    def _cancel():
+        raise NextScene("CRM Module")
 
 
 class CustomerView(Frame):
@@ -89,13 +129,14 @@ class CustomerView(Frame):
         # Save off the model that accesses the contacts database.
         self._model = model
 
-        self.__unique_id = uuid.uuid1()
+        # self.__unique_id = uuid.uuid1()
+        # self.__unique_id = generate_random_id(1,100)
 
         # Create the form for displaying the list of contacts.
         layout = Layout([50], fill_frame=True)
         self.add_layout(layout)
 
-        layout.add_widget(Label(label=f"Unique ID: {self.__unique_id}", name="id"))
+        layout.add_widget(Label(label=f"Unique ID: {generate_random_id(1,100)}", name="id"))
         layout.add_widget(Text("Name:", "name"))
         layout.add_widget(Text("Subscription Status:", "status"))
         layout.add_widget(Text("Email address:", "email"))

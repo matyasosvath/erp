@@ -13,6 +13,7 @@ class ContactModel(object):
         self._db.cursor().execute('''
             CREATE TABLE customers(
                 id INTEGER PRIMARY KEY,
+                id2 INTEGER,
                 name TEXT,
                 email TEXT,
                 status TEXT)
