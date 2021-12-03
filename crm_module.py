@@ -99,6 +99,7 @@ class AskCustomerIdView(Frame):
         self.add_layout(layout)
 
         layout.add_widget(Text("ID:", "id"))
+        self.fix()
 
 
     def reset(self):
