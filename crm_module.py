@@ -253,7 +253,7 @@ class ListView(Frame):
         # Create the form for displaying the list of contacts.
         self._list_view = ListBox(
             Widget.FILL_FRAME,
-            options= [(f"Name: {x.name}, ID: {x.id}, E-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)],
+            options= [(f"Name: {x.name}, \tID: {x.id} \t, e-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)],
             name="customers",
             add_scroll_bar=True)
 
