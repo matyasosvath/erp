@@ -283,6 +283,8 @@ class ListView(Frame):
 
 
 customers = CustomerModel()
+customers.customers = [Customer("teszt1", email="tesz@tesz.com", status="1")]
+
 
 def demo(screen, scene):
     scenes = [
