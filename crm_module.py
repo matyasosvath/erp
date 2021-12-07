@@ -280,10 +280,20 @@ class ListView(Frame):
         raise StopApplication("User pressed quit")
 
 
-
+#pF5v4wG_e_;Dr. Strangelove;strangelove@rgv453.grer;1
+#k0_JUq+8hk;Kim;supremeleader@dfs.vfsdfv;0
+#l4x__QmU8r;Unknown;---;0
+#P7+5Ggza!n;Known;ping@me;1
 
 customers = CustomerModel()
-customers.customers = [Customer("teszt1", email="tesz@tesz.com", status="1")]
+customers.customers = [
+    Customer("Dr. Strangelove", email="strangelove@rgv453.grer", status="1"),
+    Customer("Kim", email="supremeleader@dfs.vfsdfv", status="0"),
+    Customer("Unknown", email="", status="0"),
+    Customer("Known", email="ping@me", status="1"),
+]
+
+
 
 
 def demo(screen, scene):
