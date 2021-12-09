@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 from asciimatics.widgets import Frame, ListBox, Layout, Divider, Text, \
-    Button, TextBox, Widget, Label
+    Button, TextBox, Widget, Label, MultiColumnListBox
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError, NextScene, StopApplication
 import sys
 
-from models import ContactModel, CustomerModel, Customer
+from models import CustomerModel, Customer
 import uuid
 
 
