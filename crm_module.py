@@ -97,9 +97,10 @@ class HRView(Frame):
 
         layout3.add_widget(Divider(height=5))
 
-        layout5 = Layout([1])
+        layout5 = Layout([1,1])
         self.add_layout(layout5)
-        layout5.add_widget(Button("Quit", self._quit), 0)
+        layout5.add_widget(Button("Quit", self._quit), 1)
+        layout5.add_widget(Button("Go back", self._go_back), 0)
 
 
         self.fix()
@@ -118,6 +119,10 @@ class HRView(Frame):
     def _delete(self):
         self.save()
         raise NextScene("Employee ID")
+
+
+    def _go_back(self):
+        raise NextScene("ERP Software")
 
     @staticmethod
     def _quit():
@@ -208,9 +213,10 @@ class SalesView(Frame):
 
         layout3.add_widget(Divider(height=5))
 
-        layout5 = Layout([1])
+        layout5 = Layout([1,1,1,1])
         self.add_layout(layout5)
-        layout5.add_widget(Button("Quit", self._quit), 0)
+        layout5.add_widget(Button("Go back", self._go_back), 1)
+        layout5.add_widget(Button("Quit", self._quit), 3)
 
 
         self.fix()
@@ -229,6 +235,10 @@ class SalesView(Frame):
     def _delete(self):
         self.save()
         raise NextScene("Transaction ID")
+
+
+    def _go_back(self):
+        raise NextScene("ERP Software")
 
     @staticmethod
     def _quit():
@@ -251,14 +261,13 @@ class SalesListView(Frame):
         self._list_view = MultiColumnListBox(
             Widget.FILL_FRAME,
             columns=["<20", "<10", "^20", "^10"],
-            options = [([worker.name, worker.birthdate, worker.department, worker.clearance], i+1) for i, worker in enumerate(self._model.workers)],
-            titles = ["Name", "Birthdate", "Department", "Clearance"],
+            options = [([transaction.customer, transaction.product, transaction.price, transaction.date], i+1) for i, transaction in enumerate(self._model.transactions)],
+            titles = ["Customer", "Product", "Price", "Date"],
             name="customers",
             add_scroll_bar=True)
 
         layout = Layout([100], fill_frame=True)
         self.add_layout(layout)
-        # layout.add_widget(self._list_view)
         layout.add_widget(self._list_view)
         layout.add_widget(Divider())
 
@@ -269,7 +278,7 @@ class SalesListView(Frame):
         self.fix()
 
     def _reload_list(self, new_value=None):
-        self._list_view.options = [([worker.name, worker.birthdate, worker.department, worker.clearance], i+1) for i, worker in enumerate(self._model.workers)]
+        self._list_view.options = [([transaction.customer, transaction.product, transaction.price, transaction.date], i+1) for i, transaction in enumerate(self._model.transactions)]
         self._list_view.value = new_value
 
     def _go_back(self):
@@ -318,9 +327,10 @@ class CRMView(Frame):
 
         layout3.add_widget(Divider(height=5))
 
-        layout5 = Layout([1])
+        layout5 = Layout([1,1])
         self.add_layout(layout5)
-        layout5.add_widget(Button("Quit", self._quit), 0)
+        layout5.add_widget(Button("Quit", self._quit), 1)
+        layout5.add_widget(Button("Go Back", self._go_back), 0)
 
 
         self.fix()
@@ -339,6 +349,10 @@ class CRMView(Frame):
     def _delete(self):
         self.save()
         raise NextScene("Customer ID")
+
+
+    def _go_back(self):
+        raise NextScene("ERP Software")
 
     @staticmethod
     def _quit():
@@ -527,8 +541,7 @@ customers.customers = [
 
 workers = WorkerModel()
 
-#TODO cserélni
-sales = WorkerModel()
+sales = TransactionModel()
 
 
 def demo(screen, scene):
