@@ -251,14 +251,18 @@ class ListView(Frame):
         self._model = model
 
         # Create the form for displaying the list of contacts.
-        self._list_view = ListBox(
+        self._list_view = MultiColumnListBox(
             Widget.FILL_FRAME,
-            options= [(f"Name: {x.name}, \tID: {x.id} \t, e-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)],
+            columns=["<30", "<10", "<30"],
+            options = [([customer.name, customer.id, customer.email], i+1) for i, customer in enumerate(self._model.customers)],
+            titles = ["Name", "ID", "E-mail"],
             name="customers",
             add_scroll_bar=True)
 
+
         layout = Layout([100], fill_frame=True)
         self.add_layout(layout)
+        # layout.add_widget(self._list_view)
         layout.add_widget(self._list_view)
         layout.add_widget(Divider())
 
@@ -269,7 +273,8 @@ class ListView(Frame):
         self.fix()
 
     def _reload_list(self, new_value=None):
-        self._list_view.options =  [(f"Name: {x.name}, ID: {x.id}, E-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)]
+        # self._list_view.options =   [(f"Name: {x.name}, ID: {x.id}, E-mail: {x.email} ", i) for i,x in enumerate(self._model.customers)]
+        self._list_view.options = [([customer.name, customer.id, customer.email], i+1) for i, customer in enumerate(self._model.customers)]
         self._list_view.value = new_value
 
     def _go_back(self):
@@ -280,17 +285,15 @@ class ListView(Frame):
         raise StopApplication("User pressed quit")
 
 
-#pF5v4wG_e_;Dr. Strangelove;strangelove@rgv453.grer;1
-#k0_JUq+8hk;Kim;supremeleader@dfs.vfsdfv;0
-#l4x__QmU8r;Unknown;---;0
-#P7+5Ggza!n;Known;ping@me;1
-
 customers = CustomerModel()
 customers.customers = [
     Customer("Dr. Strangelove", email="strangelove@rgv453.grer", status="1"),
     Customer("Kim", email="supremeleader@dfs.vfsdfv", status="0"),
     Customer("Unknown", email="", status="0"),
-    Customer("Known", email="ping@me", status="1"),
+    Customer("Known", email="ping@me.com", status="1"),
+    Customer("Farkas Miklós", email="farkas.m@gmail.com", status="1"),
+    Customer("Nagy Bence", email="nagy.bence@gmail.com", status="0"),
+    Customer("Not Spam", email="spam.me@not.spam.com", status="0"),
 ]
 
 
