@@ -286,6 +286,8 @@ class ListView(Frame):
 
 
 customers = CustomerModel()
+
+# Create dummy data
 customers.customers = [
     Customer("Dr. Strangelove", email="strangelove@rgv453.grer", status="1"),
     Customer("Kim", email="supremeleader@dfs.vfsdfv", status="0"),
