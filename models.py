@@ -9,16 +9,24 @@ import util
 import data_manager
 
 DATAFILE = "hr.csv"
+DATAFILE_SALES = "sales.csv"
+DATAFILE_CRM = "crm.csv"
 
 HEADERS = ["Id", "Name", "Date of birth", "Department", "Clearance"]
 
 # DATABASE SPECIFIC PARAMTERES
 # DO NOT CHANGE
 SECURE_ID = 0
+
 NAME = 1
 BIRTHDATE = 2
 DEPARMENT = 3
 CLEARANCE = 4
+
+SALES_CUSTOMER = 1
+SALES_PRODUCT = 2
+SALES_PRICE = 3
+SALES_DATE = 4
 
 
 class Customer:
@@ -130,6 +138,104 @@ class WorkerModel(object):
                     del self.workers[i]
 
         self.save()
+
+
+################################################
+#################### SALES MODEL ###############
+################################################
+
+class Transaction:
+    def __init__(self, customer: str = "", product:str = "", price: str = "", date: str = ""):
+        self.secure_id = util.generate_id()
+        self.customer = customer
+        self.product = product
+        self.price = price
+        self.date = date
+
+class TransactionModel(object):
+    def __init__(self):
+
+        self.current_id = None
+        self.transactions = self.read_all()
+
+    def read_all(self):
+
+        data = []
+
+        raw_data = data_manager.read_table_from_file(DATAFILE_SALES)
+
+        for transaction in raw_data:
+
+            customer = transaction[SALES_CUSTOMER]
+            product = transaction[SALES_PRODUCT]
+            price = transaction[SALES_PRICE]
+            date = transaction[SALES_DATE]
+
+            data.append(Transaction(
+                    customer=customer,
+                    product=product,
+                    price=price,
+                    date=date
+                ))
+
+        return data
+
+    def save(self):
+        data = []
+        for transaction in self.transactions:
+            transaction = self.reconstruct_transaction_class_to_list(transaction)
+            data.append(transaction)
+
+        data_manager.write_table_to_file(DATAFILE, data)
+
+    def reconstruct_transaction_class_to_list(self, transaction: Transaction):
+        return [transaction.secure_id, transaction.customer, transaction.product, transaction.price, transaction.date]
+
+    def create(self, transaction: Transaction):
+        self.transactions.append(transaction)
+        self.save()
+
+    def read(self, secure_id):
+        for transaction in self.transactions:
+            if secure_id == transaction.secure_id:
+                return transaction
+
+    def update(self, secure_id,
+               customer: str = "",
+               product: str = "",
+               price: str = "",
+               date: str = ""):
+
+        for transaction in self.transactions:
+
+            if transaction.secure_id == secure_id:
+
+                transaction.customer = customer
+                transaction.product = product
+                transaction.price = price
+                transaction.date = date
+
+        self.save()
+
+    def delete(self, secure_id):
+        for i, transaction in enumerate(self.transactions):
+                if transaction.secure_id == secure_id:
+                    del self.transactions[i]
+
+        self.save()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # # Create Test database
 
